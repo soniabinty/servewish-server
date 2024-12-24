@@ -57,6 +57,16 @@ app.get("/service/:id", async (req, res) => {
   
     });
 
+// service by email
+
+app.get("/services", async (req, res) => {
+  const email = req.query.email;
+  const query = { email: email };
+  const result = await serviceCollection.find(query).toArray();
+  res.send(result);
+  
+    });
+
 
 
 // REVIEW POST
@@ -76,6 +86,15 @@ app.get('/review', async(req, res) =>{
   res.send(result)
  })
 
+// service id
+ app.get('/review/:serviceId', async (req, res) => {
+ 
+  const serviceId = req.params.serviceId;
+  const query = { serviceId: serviceId }
+  const cursor = reviewCollection.find(query);
+  const result = await cursor.toArray();
+  res.send(result);
+})
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
