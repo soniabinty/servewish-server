@@ -86,7 +86,7 @@ app.get('/review', async(req, res) =>{
   res.send(result)
  })
 
-// service id
+// review get by service id
  app.get('/review/:serviceId', async (req, res) => {
  
   const serviceId = req.params.serviceId;
@@ -95,6 +95,18 @@ app.get('/review', async(req, res) =>{
   const result = await cursor.toArray();
   res.send(result);
 })
+
+
+// review get my email
+
+app.get("/reviews", async (req, res) => {
+  const email = req.query.email;
+  const query = { email: email };
+  const result = await reviewCollection.find(query).toArray();
+  res.send(result);
+  
+    });
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
