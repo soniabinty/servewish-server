@@ -27,6 +27,7 @@ async function run() {
  await client.connect();
 
  const serviceCollection = client.db("serviceDB").collection('service')
+ const reviewCollection = client.db("serviceDB").collection('review')
 
 
 // service post
@@ -56,6 +57,24 @@ app.get("/service/:id", async (req, res) => {
   
     });
 
+
+
+// REVIEW POST
+app.post('/review', async(req, res) =>{
+  const newReview = req.body
+  console.log(newReview)
+  const result = await reviewCollection.insertOne(newReview)
+  res.send(result)
+ })
+
+
+//  REVIEW GET
+
+app.get('/review', async(req, res) =>{
+  const cursor=reviewCollection.find()
+  const result = await cursor.toArray()
+  res.send(result)
+ })
 
 
     // Send a ping to confirm a successful connection
