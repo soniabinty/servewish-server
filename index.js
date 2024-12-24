@@ -67,7 +67,15 @@ app.get("/services", async (req, res) => {
   
     });
 
+// service delete
 
+app.delete("/service/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await serviceCollection.deleteOne(query);
+  res.send(result);
+
+    });
 
 // REVIEW POST
 app.post('/review', async(req, res) =>{
