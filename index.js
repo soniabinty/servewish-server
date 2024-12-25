@@ -143,6 +143,40 @@ app.get("/reviews", async (req, res) => {
   
     });
 
+app.delete("/review/:id", async (req, res) => {
+  const id = req.params.id;
+  const query = { _id: new ObjectId(id) };
+  const result = await reviewCollection.deleteOne(query);
+  res.send(result);
+
+    });
+
+
+app.put("/review/:id", async (req, res) => {
+  const id = req.params.id;
+  const filter = { _id: new ObjectId(id) };
+  const options = { upsert: true };
+  const updatedReview = req.body;
+
+  const review = {
+    $set: {
+      title: updatedReview.title,
+      
+      rating: updatedReview.rating,
+      reviewText: updatedReview.reviewText,
+      
+
+    },
+  
+  };
+
+  const result = await reviewCollection.updateOne(filter, review, options);
+    console.log(result)
+  res.send(result);
+});
+
+
+
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
