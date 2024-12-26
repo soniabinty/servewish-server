@@ -28,8 +28,7 @@ async function run() {
 
  const serviceCollection = client.db("serviceDB").collection('service')
  const reviewCollection = client.db("serviceDB").collection('review')
-
-
+const userCollection = client.db("serviceDB").collection("users")
 // service post
  app.post('/service', async(req, res) =>{
   const newService = req.body
@@ -105,6 +104,31 @@ app.put("/service/:id", async (req, res) => {
   res.send(result);
 });
 
+// service search
+
+app.get("/services/search", async (req, res) => {
+  const { query, category } = req.query;
+  
+ 
+  const filter = {};
+  if (category && category !== 'All') {
+    filter.category = category; 
+  }
+
+  if (query) {
+    filter.$or = [
+      { title: { $regex: query, $options: 'i' } }, 
+      { category: { $regex: query, $options: 'i' } },
+      { company: { $regex: query, $options: 'i' } } 
+    ];
+  }
+
+ 
+    const services = await serviceCollection.find(filter).toArray();
+    res.send(services);
+ 
+});
+
 // REVIEW POST
 app.post('/review', async(req, res) =>{
   const newReview = req.body
@@ -175,6 +199,22 @@ app.put("/review/:id", async (req, res) => {
   res.send(result);
 });
 
+app.post('/users', async (req, res) => {
+  const newUser = req.body; 
+  const result = await userCollection.insertOne(newUser);
+  res.send(result);
+});
+
+    // Count total users
+    app.get('/users', async (req, res) => {
+     
+  
+
+        const cursor=userCollection.find()
+        const result = await cursor.toArray()
+        res.send(result)
+     
+    });
 
 
 
