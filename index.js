@@ -8,10 +8,7 @@ const cookieParser = require("cookie-parser")
 const port = process.env.PORT || 5000;
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 app.use(
-  cors({
-    origin: ["http://localhost:5173" , "https://servewish-d87ca.web.app/" , "https://servewish-d87ca.firebaseapp.com/"],
-    credentials: true,
-  })
+  cors()
 );
 app.use(express.json());
 app.use(cookieParser());
@@ -178,6 +175,14 @@ app.get('/review', async(req, res) =>{
   res.send(result)
  })
 
+
+   app.get('/newreview', async(req, res) =>{
+        const cursor=reviewCollection.find().sort({date: -1}).limit(8)
+        const result = await cursor.toArray()
+        res.send(result)
+       })
+
+
 // review get by service id
  app.get('/review/:serviceId', async (req, res) => {
  
@@ -252,7 +257,7 @@ app.post('/users', async (req, res) => {
     // limit for service
 
     app.get('/features', async(req, res) =>{
-      const cursor=serviceCollection.find().limit(6)
+      const cursor=serviceCollection.find().limit(8)
       const result = await cursor.toArray()
       res.send(result)
      })
